@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const title = params.get("title");
+      const description = params.get("description");
+      const buttonType = params.get("buttonType");
+      const redirectUrl = params.get("url");
+
+      // Send tracking info to Logic App
+      fetch("https://prod-28.centralindia.logic.azure.com:443/workflows/1b2d3fe41bb748ff969a51daff712134/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=JzeahCsvTtIGpaI0yNsePcHks8yHLPCNFZvlUFZzZoY", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title,
+          description: description,
+          buttonType: buttonType
+        })
+      }).finally(() => {
+        // Redirect after tracking
+        if (redirectUrl) {
+          window.location.href = redirectUrl;
+        } else {
+          document.body.innerText = "No redirect URL provided.";
+        }
+      });
+    })();
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>
